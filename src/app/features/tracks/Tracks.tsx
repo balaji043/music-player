@@ -1,19 +1,17 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { BiPause, BiPlay, BiTimeFive } from 'react-icons/bi';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { Loader } from '../../components/Loader';
 import { ITrackResponse, Track } from '../../types';
 import { formateDate, formatTime } from '../../utilities';
-import {
-	selectSelectedTrack,
-	selectTrackToPlay,
-} from '../dashboard/dashboardSlice';
+import { selectSelectedTrack, selectTrackToPlay } from '../dashboard/dashboardSlice';
 import {
 	getTracksThunk,
 	selectTracksResponse,
 	selectTracksState,
 } from './TracksSlice';
+import { searchAndSelectTrackFromYoutube } from '../MusicPlayer/MusicPlayerSlice';
 
 const Tracks = (props: { url: string }) => {
 	const tracksResponse = useAppSelector(selectTracksResponse);
@@ -128,6 +126,7 @@ export const TrackPlayButton = (props: ITrackTablePlayButton) => {
 		<button
 			className='text-4xl text-white'
 			onClick={() => {
+				dispatch(searchAndSelectTrackFromYoutube(track));
 				dispatch(selectTrackToPlay(track));
 			}}
 		>
@@ -136,10 +135,14 @@ export const TrackPlayButton = (props: ITrackTablePlayButton) => {
 	);
 };
 
-export const TrackInfo = (props: { track: Track; size: number }) => {
-	const { track, size } = props;
+export const TrackInfo = (props: {
+	track: Track;
+	size: number;
+	className?: string;
+}) => {
+	const { track, size, className } = props;
 	return (
-		<div className='flex items-start justify-start'>
+		<div className={`flex items-start justify-start ${className || ''}`}>
 			<img
 				className=''
 				src={track.album.images[2].url}

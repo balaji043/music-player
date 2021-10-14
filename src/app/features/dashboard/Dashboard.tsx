@@ -2,12 +2,12 @@ import { HiHome, HiSearch } from 'react-icons/hi';
 import Home from '../Home/Home';
 import Search from '../search/Search';
 import Songs from '../songs/Songs';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { navigateTo, selectNavPath } from './dashboardSlice';
 import { PlayList } from '../playlist/PlayLists';
 import SinglePlayList from '../SinglePlayList/SinglePlayList';
 import { NavPath } from '../../types';
 import { MusicPlayer } from '../MusicPlayer/MusicPlayer';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 
 const Dashboard = () => {
 	return (

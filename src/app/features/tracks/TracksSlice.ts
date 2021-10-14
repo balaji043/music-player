@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit"
 import { AxiosResponse } from "axios"
-import { RootState } from "../../app/store"
+import { RootState } from "../../redux/store"
 import { ITrackResponse, StateType } from "../../types"
 import { getTracksPlayLists } from "./TracksAPI"
 

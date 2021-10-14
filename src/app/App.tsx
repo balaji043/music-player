@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from './app/hooks';
+import { useEffect } from 'react';
 import { Loader } from './components/Loader';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Login } from './features/login/Login';
@@ -12,6 +11,7 @@ import {
 	selectTokenExpiresIn,
 	selectTokeReceviedOn,
 } from './features/login/loginSlice';
+import { useAppSelector, useAppDispatch } from './redux/hooks';
 
 function App() {
 	const isAuthenticated = useAppSelector(selectIsAuthenticated);

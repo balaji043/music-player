@@ -1,7 +1,7 @@
 import React from 'react';
 import { BiPause, BiPlay } from 'react-icons/bi';
 import { connect } from 'react-redux';
-import { RootState } from '../../../app/store';
+import { RootState } from '../../../redux/store';
 import { Track } from '../../../types';
 import { selectTrackToPlay } from '../../dashboard/dashboardSlice';
 

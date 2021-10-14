@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
+import { RootState } from "../../redux/store";
 import { NavPath, PlayListsItem, Track } from "../../types";
 
 

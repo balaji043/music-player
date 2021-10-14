@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { Spotify } from '../../types';
 import {
 	selectAuthCode,

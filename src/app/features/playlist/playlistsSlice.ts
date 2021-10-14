@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
-import { RootState } from "../../app/store";
+import { RootState } from "../../redux/store";
 import { IGetPlayListsParams, IPlayListsResponse, StateType } from "../../types";
 import { SpotifyPlayListApi } from "./playlistsApi";
 

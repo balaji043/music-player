@@ -1,10 +1,10 @@
-import { useAppSelector } from '../../app/hooks';
 import { Loader } from '../../components/Loader';
 import { PlayListsItem } from '../../types';
 import { selectSelectedPlayList } from '../dashboard/dashboardSlice';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { BsFillPlayFill } from 'react-icons/bs';
 import Tracks from '../tracks/Tracks';
+import { useAppSelector } from '../../redux/hooks';
 
 const SinglePlayList = () => {
 	const playList = useAppSelector(selectSelectedPlayList);

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Loader } from '../../components/Loader';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { IPlayListsResponse, PlayListsItem } from '../../types';
 import { navigateToPlayList } from '../dashboard/dashboardSlice';
 import {

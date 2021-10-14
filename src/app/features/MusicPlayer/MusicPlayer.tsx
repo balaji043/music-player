@@ -1,19 +1,30 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { BiPause, BiPlay } from 'react-icons/bi';
-import { useAppSelector } from '../../app/hooks';
+import { Loader } from '../../components/Loader';
+import { useAppSelector } from '../../redux/hooks';
 import { Track } from '../../types';
 import { secondsToMinutesAndSeconds } from '../../utilities';
 import { selectSelectedTrack } from '../dashboard/dashboardSlice';
 import { TrackInfo } from '../tracks/Tracks';
+import { selectYoutubeRespose } from './MusicPlayerSlice';
 
 interface IMusciPlayerProps {}
 
 const MusicPlayer: FC<IMusciPlayerProps> = (props: IMusciPlayerProps) => {
 	const track = useAppSelector(selectSelectedTrack);
+	const youtubResponse = useAppSelector(selectYoutubeRespose);
 
 	const getUi = (): JSX.Element => {
 		if (track) {
-			return <Player track={track} />;
+			if (youtubResponse.state === 'idle') {
+				return <Player track={track} videoId={youtubResponse.data} />;
+			} else {
+				if (youtubResponse.state === 'error') {
+					return <div>error occurred</div>;
+				} else {
+					return <Loader />;
+				}
+			}
 		} else
 			return (
 				<div>
@@ -32,18 +43,19 @@ export { MusicPlayer };
 
 export interface TrackProp {
 	track: Track;
+	videoId: string;
 }
 
 const Player = (props: TrackProp) => {
-	const { track } = props;
+	const { track, videoId } = props;
 
 	return (
 		<div
-			className='flex justify-between items-center px-6'
+			className='grid grid-cols-12 px-6 items-center'
 			style={{ height: '10vh' }}
 		>
-			<TrackInfo track={track} size={40} />
-			<PlayerTrack track={track} />
+			<TrackInfo track={track} size={40} className='col-span-3' />
+			<PlayerTrack track={track} videoId={videoId} />
 			<div></div>
 		</div>
 	);
@@ -51,7 +63,7 @@ const Player = (props: TrackProp) => {
 
 const PlayerTrack = (props: TrackProp) => {
 	const [isPlaying, setIsPlaying] = useState(true);
-	const [duration, setDuration] = useState('');
+	const [duration, setDuration] = useState('00:00');
 	const audioRef = useRef<HTMLAudioElement>(null);
 
 	const play = () => {
@@ -69,20 +81,29 @@ const PlayerTrack = (props: TrackProp) => {
 		}
 	};
 	return (
-		<div className='flex flex-col items-center'>
-			<div className='flex'>
-				<Slider
-					audioRef={audioRef}
-					isPlaying={isPlaying}
-					setIsPlaying={setIsPlaying}
-					track={props.track}
-					setDuration={setDuration}
-				/>
-				<div className=''>{duration}</div>
+		<div className='col-span-5'>
+			<div className='flex flex-col items-center min-w-full'>
+				<div className='flex w-full'>
+					<Slider
+						audioRef={audioRef}
+						isPlaying={isPlaying}
+						setIsPlaying={setIsPlaying}
+						track={props.track}
+						setDuration={setDuration}
+						videoId={props.videoId}
+					/>
+					<div className=''>{duration}</div>
+				</div>
+				<iframe
+					height='100'
+					src={`https://www.youtube.com/embed/${props.videoId}`}
+				></iframe>
+				<div className='w-full flex items-center justify-center'>
+					<button className='text-4xl text-white' onClick={play}>
+						{isPlaying ? <BiPause /> : <BiPlay />}
+					</button>
+				</div>
 			</div>
-			<button className='text-4xl text-white' onClick={play}>
-				{isPlaying ? <BiPause /> : <BiPlay />}
-			</button>
 		</div>
 	);
 };
@@ -93,12 +114,13 @@ interface ISliderProps {
 	setIsPlaying: (b: boolean) => void;
 	setDuration: (duraton: string) => void;
 	audioRef: React.RefObject<HTMLAudioElement>;
+	videoId: string;
 }
 
 const Slider = (props: ISliderProps) => {
 	const { track, isPlaying, setIsPlaying, audioRef, setDuration } = props;
-	const [percentage, setPercentage] = useState(0);
-	const [currentTime, setCurrentTime] = useState('');
+	const [percentage, setPercentage] = useState<any>(0);
+	const [currentTime, setCurrentTime] = useState('00:00');
 
 	useEffect(() => {
 		if (isPlaying) {
@@ -131,14 +153,14 @@ const Slider = (props: ISliderProps) => {
 	};
 	return (
 		<>
-			<div className=''>{currentTime}</div>
+			<div>{currentTime}</div>
 			<input
 				type='range'
-				value={percentage}
+				value={isNaN(parseInt(percentage)) ? '00:00' : percentage}
 				min={0}
 				max={100}
 				onChange={onChange}
-				className='mx-4'
+				className='mx-4 w-full'
 			/>
 			<audio
 				src={track.preview_url}

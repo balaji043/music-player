@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
-import { RootState } from "../../app/store";
+import { RootState } from "../../redux/store";
 import { CacheKeys, ICacheType, ITokenResponse, Spotify, StateType, StringOrNull, } from "../../types";
 import { SpotifyAuthApi, writeToCache } from "./loginApi";
 

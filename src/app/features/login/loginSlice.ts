@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
-import { RootState } from "../../redux/store";
-import { CacheKeys, ICacheType, ITokenResponse, Spotify, StateType, StringOrNull, } from "../../types";
+import { RootState, RootStateType } from "../../redux/store";
+import { CacheKeys, ICacheType, ITokenResponse, Spotify, spotifyApis, StateType, StringOrNull, } from "../../types";
 import { SpotifyAuthApi, writeToCache } from "./loginApi";
 
 
@@ -55,12 +55,12 @@ export const loginUser = createAsyncThunk<
 export const refreshTokenThunk = createAsyncThunk<
     ITokenResponse,
     string,
-    { state: RootState }
+    RootStateType
 >(
     "token/refresh",
     async (refreshToken, thunkApi) => {
         const response: AxiosResponse<ITokenResponse> = await SpotifyAuthApi.refreshSpotifyToken(refreshToken);
-        const state = thunkApi.getState()
+        const state = thunkApi.getState();
         if (response.status === 200) {
             const data = response.data
             const beforeTokens = state.auth.tokens;
@@ -116,6 +116,7 @@ export const authSlice = createSlice<
                 state.tokens = data.tokens;
                 state.code = data.code;
                 state.tokeReceviedOn = data.time;
+                spotifyApis.setAccessToken(state.tokens.access_token);
                 state.isAuthenticated = true;
                 state.hasTokensInCache = true;
             } else {
@@ -129,6 +130,7 @@ export const authSlice = createSlice<
         }).addCase(loginUser.fulfilled, (state, action) => {
             if (action && action.payload) {
                 state.tokens = action.payload;
+                spotifyApis.setAccessToken(state.tokens.access_token);
                 state.isAuthenticated = true;
                 state.hasTokensInCache = true;
             }
@@ -140,6 +142,7 @@ export const authSlice = createSlice<
         }).addCase(refreshTokenThunk.fulfilled, (state, action) => {
             if (action && action.payload) {
                 state.tokens = action.payload;
+                spotifyApis.setAccessToken(state.tokens.access_token);
             }
         })
     }

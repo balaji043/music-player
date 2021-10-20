@@ -71,17 +71,16 @@ const AppLink = (props: {
 }) => {
 	const dispatch = useAppDispatch();
 	const navPath = useAppSelector(selectNavPath);
-	const bg = navPath === props.to ? 'bg-gray-800' : 'hover:bg-gray-500';
+	const bgColor = navPath === props.to ? 'bg-gray-800' : 'hover:bg-gray-500';
+	const textColor = navPath === props.to ? 'text-white' : 'text-gray-400';
+	const handleNavButtonClick = () => {
+		dispatch(navigateTo(props.to));
+	};
 	return (
-		<button
-			className='text-lg rounded mx-4 my-2'
-			onClick={() => {
-				dispatch(navigateTo(props.to));
-			}}
-		>
-			<div className={`flex p-2 rounded items-center  ${bg}`}>
-				{props.iconType}
-				<span className='pl-2'>{props.text}</span>
+		<button className='rounded mx-4 my-2' onClick={handleNavButtonClick}>
+			<div className={`flex p-2 rounded items-center ${bgColor} ${textColor}`}>
+				<div className="text-2xl">{props.iconType}</div>
+				<span className={`text-sm font-bold pl-2`}>{props.text}</span>
 			</div>
 		</button>
 	);

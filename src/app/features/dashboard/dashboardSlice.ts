@@ -1,16 +1,17 @@
-import { createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit";
-import { RootState } from "../../redux/store";
-import { NavPath, PlayListsItem, Track } from "../../types";
+import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit";
+import { RootState, RootStateType } from "../../redux/store";
+import { NavPath, spotifyApis } from "../../types";
 
 
 interface IDashboardState {
     path: NavPath;
-    selectedPlayList?: PlayListsItem;
-    selectedTrack?: Track;
+    selectedPlayList?: SpotifyApi.PlaylistBaseObject;
+    selectedUris?: string | string[];
 }
 const initialState: IDashboardState = {
     path: 'home'
 }
+
 export const dashboardSlice = createSlice<
     IDashboardState,
     SliceCaseReducers<IDashboardState>
@@ -21,24 +22,25 @@ export const dashboardSlice = createSlice<
         navigateTo: (state, action: PayloadAction<NavPath>) => {
             state.path = action.payload
         },
-        navigateToPlayList: (state, action: PayloadAction<PlayListsItem>) => {
+        navigateToPlayList: (state, action: PayloadAction<SpotifyApi.PlaylistObjectFull>) => {
             state.selectedPlayList = action.payload
             state.path = 'playListSelected'
         },
-        selectTrackToPlay: (state, action: PayloadAction<Track>) => {
-            state.selectedTrack = action.payload
+        selectTracksToPlay: (state, _) => {
+            state.selectedUris = state.selectedPlayList?.uri;
         }
-    }
+    },
+
 })
 
-export const { navigateTo, navigateToPlayList, selectTrackToPlay } = dashboardSlice.actions
+export const { navigateTo, navigateToPlayList, selectTracksToPlay } = dashboardSlice.actions
 
 const selectNavPath = (state: RootState) => state.dashboard.path
 const selectSelectedPlayList = (state: RootState) => state.dashboard.selectedPlayList
-const selectSelectedTrack = (state: RootState) => state.dashboard.selectedTrack
+const selectSelectedUris = (state: RootState) => state.dashboard.selectedUris
 
 export {
     selectNavPath,
     selectSelectedPlayList,
-    selectSelectedTrack
+    selectSelectedUris
 }

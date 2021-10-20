@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Loader } from '../../components/Loader';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import { IPlayListsResponse, PlayListsItem } from '../../types';
 import { navigateToPlayList } from '../dashboard/dashboardSlice';
 import {
 	getUserPlayListsThunk,
@@ -37,7 +36,9 @@ const PlayList = () => {
 	);
 };
 
-const ShowListOfPlayList = (props: { response: IPlayListsResponse }) => {
+const ShowListOfPlayList = (props: {
+	response: SpotifyApi.ListOfUsersPlaylistsResponse;
+}) => {
 	return (
 		<div className='flex flex-col h-full w-full'>
 			{props.response.items.map((item) => {
@@ -47,12 +48,14 @@ const ShowListOfPlayList = (props: { response: IPlayListsResponse }) => {
 	);
 };
 
-const PlayListItem = (props: { playList: PlayListsItem }) => {
+const PlayListItem = (props: {
+	playList: SpotifyApi.PlaylistObjectSimplified;
+}) => {
 	const { playList } = props;
 	const image = playList.images[playList.images.length - 1];
 	const dispatch = useAppDispatch();
 	return (
-		<div className="p-2 flex w-full">
+		<div className='p-2 flex w-full'>
 			<button
 				className='flex p-3 flex-grow rounded hover:bg-gray-500'
 				onClick={() => {

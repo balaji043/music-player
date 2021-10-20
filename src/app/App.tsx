@@ -28,7 +28,11 @@ function App() {
 			}
 		}
 	};
-	return <div className='h-screen w-screen overflow-hidden bg-black text-white'>{getUi()}</div>;
+	return (
+		<div className='h-screen w-screen overflow-hidden bg-black text-white'>
+			{getUi()}
+		</div>
+	);
 }
 
 export default App;
@@ -58,10 +62,10 @@ function useLoadAndRefreshToken() {
 			dispatch(refreshTokenThunk(refreshToken));
 		}, (expiresIn - 60) * 1000);
 		return () => clearInterval(interval);
-	}, [refreshToken, tokenExpiresIn, tokenReceviedOn, dispatch]);
+	}, [refreshToken, tokenExpiresIn, tokenReceviedOn]);
 
 	useEffect(() => {
 		dispatch(loadTokenResponseFromCache());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dispatch]);
+	}, []);
 }

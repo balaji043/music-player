@@ -1,3 +1,4 @@
+import SpotifyWebApi from "spotify-web-api-node";
 import { AppCredentials } from "./credentials";
 
 export type VariableStringType = { [x: string]: string };
@@ -9,8 +10,9 @@ export const CacheKeys = {
   codeCache: 'code'
 }
 
-export namespace Spotify {
+export const spotifyApis = new SpotifyWebApi();
 
+export namespace Spotify {
 
   // params keys
   export const ParamKeys = {
@@ -39,6 +41,10 @@ export namespace Spotify {
     "streaming",
     "user-read-email",
     "user-read-private",
+    "user-library-read",
+    "user-library-modify",
+    "user-read-playback-state",
+    "user-modify-playback-state",
   ];
   const scopes = scopeArray.join("%20");
   export const getCode = () => new URLSearchParams(window.location.search).get('code');
@@ -106,127 +112,8 @@ export interface ITokenResponse {
   scope: string,
   token_type: string,
 }
-
-export interface SpotifyListResponse<T> {
-  limit: number;
-  next?: any;
-  offset: number;
-  previous?: any;
-  total: number;
-  href: string;
-  items: T[]
+export interface IApiResponseState<T> {
+  state: StateType,
+  data: T,
+  error: string
 }
-
-export interface ExternalUrls {
-  spotify: string;
-}
-
-export interface ExternalIds {
-  isrc: string;
-}
-
-export interface Owner {
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  type: string;
-  uri: string;
-  display_name: string;
-}
-
-export interface PlayListTracks {
-  href: string;
-  total: number;
-}
-
-export interface PlayListsItem {
-  collaborative: boolean;
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  images: SpotifyImage[];
-  name: string;
-  owner: Owner;
-  public: boolean;
-  snapshot_id: string;
-  tracks: PlayListTracks;
-  type: string;
-  uri: string;
-}
-
-export interface SpotifyImage {
-  height: number,
-  width: number,
-  url: string
-}
-
-export interface AddedBy {
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  type: string;
-  uri: string;
-}
-
-export interface Artist {
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  name: string;
-  type: string;
-  uri: string;
-}
-
-export interface Album {
-  album_type: string;
-  artists: Artist[];
-  available_markets: string[];
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  images: SpotifyImage[];
-  name: string;
-  release_date: string;
-  release_date_precision: string;
-  total_tracks: number;
-  type: string;
-  uri: string;
-}
-
-export interface Track {
-  album: Album;
-  artists: Artist[];
-  available_markets: string[];
-  disc_number: number;
-  duration_ms: number;
-  episode: boolean;
-  explicit: boolean;
-  external_ids: ExternalIds;
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  is_local: boolean;
-  name: string;
-  popularity: number;
-  preview_url: string;
-  track: boolean;
-  track_number: number;
-  type: string;
-  uri: string;
-}
-
-export interface VideoThumbnail {
-  url?: any;
-}
-
-export interface TrackItem {
-  added_at: string;
-  added_by: AddedBy;
-  is_local: boolean;
-  primary_color?: any;
-  track: Track;
-  video_thumbnail: VideoThumbnail;
-}
-
-export type ITrackResponse = SpotifyListResponse<TrackItem>
-export type IPlayListsResponse = SpotifyListResponse<PlayListsItem>

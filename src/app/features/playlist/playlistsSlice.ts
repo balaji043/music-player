@@ -1,14 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
 import { RootState } from "../../redux/store";
-import { IGetPlayListsParams, IPlayListsResponse, StateType } from "../../types";
-import { SpotifyPlayListApi } from "./playlistsApi";
+import { IGetPlayListsParams, spotifyApis, StateType } from "../../types";
 
 interface IPlayListsState {
     params: IGetPlayListsParams
     state: StateType
     error: string,
-    response?: IPlayListsResponse
+    response?: SpotifyApi.ListOfUsersPlaylistsResponse
 }
 
 const initialState: IPlayListsState = {
@@ -22,7 +20,7 @@ const initialState: IPlayListsState = {
 
 
 export const getUserPlayListsThunk = createAsyncThunk<
-    IPlayListsResponse,
+    SpotifyApi.ListOfUsersPlaylistsResponse,
     IGetPlayListsParams,
     { state: RootState }
 >(
@@ -32,11 +30,11 @@ export const getUserPlayListsThunk = createAsyncThunk<
             const state = thunkApi.getState()
             const token = state.auth.tokens.access_token;
             setParams(data);
-            const response: AxiosResponse<IPlayListsResponse> = await SpotifyPlayListApi.getUserPlayLists(data, token);
-            if (response.status === 200) {
-                return response.data
+            const response = await spotifyApis.getUserPlaylists()
+            if (response.statusCode === 200) {
+                return response.body;
             } else {
-                return thunkApi.rejectWithValue(response.data)
+                return thunkApi.rejectWithValue(response.body)
             }
         } catch (error: any) {
             console.log(error.response.data);

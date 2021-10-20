@@ -1,5 +1,4 @@
 import { Loader } from '../../components/Loader';
-import { PlayListsItem } from '../../types';
 import { selectSelectedPlayList } from '../dashboard/dashboardSlice';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { BsFillPlayFill } from 'react-icons/bs';
@@ -16,7 +15,7 @@ const SinglePlayList = () => {
 
 export default SinglePlayList;
 
-const GenericThing = (props: { item: PlayListsItem; track: any }) => {
+const GenericThing = (props: { item: SpotifyApi.PlaylistBaseObject; track: any }) => {
 	return (
 		<div
 			style={{ height: '90vh' }}
@@ -24,12 +23,12 @@ const GenericThing = (props: { item: PlayListsItem; track: any }) => {
 		>
 			<InfoSection item={props.item} />
 			<ActionButtonSection item={props.item} />
-			<Tracks url={props.item.tracks.href} />
+			<Tracks id={props.item.id} />
 		</div>
 	);
 };
 
-const ActionButtonSection = (props: { item: PlayListsItem }) => {
+const ActionButtonSection = (props: { item: SpotifyApi.PlaylistBaseObject }) => {
 	return (
 		<div className='pl-8 pr-8 flex items-center'>
 			<span className='inline-block rounded-full p-3 text-5xl bg-green-500'>
@@ -40,7 +39,7 @@ const ActionButtonSection = (props: { item: PlayListsItem }) => {
 	);
 };
 
-const InfoSection = (props: { item: PlayListsItem }) => {
+const InfoSection = (props: { item: SpotifyApi.PlaylistBaseObject }) => {
 	return (
 		<div className='p-8 flex flex-row items-end justify-end '>
 			<img
@@ -56,7 +55,7 @@ const InfoSection = (props: { item: PlayListsItem }) => {
 					<div className='text-sm font-bold'>
 						{props.item.owner.display_name}
 						<span className='text-gray-400'>
-							- {props.item.tracks.total} Songs
+							- {props.item.id} Songs
 						</span>
 					</div>
 				</div>

@@ -1,29 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { BiPause, BiPlay, BiTimeFive } from 'react-icons/bi';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { Loader } from '../../components/Loader';
-import { ITrackResponse, Track } from '../../types';
 import { formateDate, formatTime } from '../../utilities';
-import {
-	selectSelectedTrack,
-	selectTrackToPlay,
-} from '../dashboard/dashboardSlice';
+
 import {
 	getTracksThunk,
 	selectTracksResponse,
 	selectTracksState,
 } from './TracksSlice';
-import { searchAndSelectTrackFromYoutube } from '../MusicPlayer/MusicPlayerSlice';
+import { selectTracksToPlay } from '../dashboard/dashboardSlice';
 
-const Tracks = (props: { url: string }) => {
+const Tracks = (props: { id: string }) => {
 	const tracksResponse = useAppSelector(selectTracksResponse);
 	const tracksState = useAppSelector(selectTracksState);
 
 	const dispatch = useAppDispatch();
 	useEffect(() => {
-		dispatch(getTracksThunk(props.url));
-	}, [props.url, dispatch]);
+		dispatch(getTracksThunk(props.id));
+	}, [props.id, dispatch]);
 	const getUi = () => {
 		if (tracksState === 'loading') {
 			return <Loader />;
@@ -84,13 +80,18 @@ interface ITrackRowProps {
 	addedAt?: string;
 }
 const TrackRow: React.FC<ITrackRowProps> = (props: ITrackRowProps) => {
-	const { track, index, isPlayList } = props;
+	const { track, index, isPlayList, addedAt } = props;
+	const dispatch = useAppDispatch();
 	return (
 		<div className='grid grid-cols-12 gap-4 items-center text-sm rounded-lg mt-4 p-4 hover:bg-gray-600'>
 			<div className='col-span-1'>
 				<div className='flex items-center justify-evenly'>
 					<span>{index}</span>
-					<TrackPlayButton track={track} />
+					<TrackPlayButton
+						onClick={(isPlaying) => {
+							dispatch(selectTracksToPlay({}));
+						}}
+					/>
 				</div>
 			</div>
 			<div className='sm:col-span-10 xl:col-span-4 xl:block'>
@@ -105,11 +106,11 @@ const TrackRow: React.FC<ITrackRowProps> = (props: ITrackRowProps) => {
 					</button>
 				</div>
 			)}
-			{/* {isPlayList && addedAt && (
+			{isPlayList && addedAt && (
 				<div className='sm:hidden xl:col-span-2 xl:block'>
 					{formateDate(addedAt)}
 				</div>
-			)} */}
+			)}
 			<div className='text-right'>{formatTime(track?.duration_ms)}</div>
 		</div>
 	);
@@ -119,22 +120,20 @@ TrackRow.defaultProps = {
 };
 
 interface ITrackTablePlayButton {
-	track: SpotifyApi.TrackObjectFull;
+	onClick: (isPlaying: boolean) => void;
 }
 export const TrackPlayButton = (props: ITrackTablePlayButton) => {
-	const seletedTrack = useAppSelector(selectSelectedTrack);
-	const dispatch = useAppDispatch();
-	const { track } = props;
-
+	const { onClick } = props;
+	const [isPlaying, setIsPlaying] = useState(false);
 	return (
 		<button
 			className='text-4xl text-white'
 			onClick={() => {
-				// dispatch(searchAndSelectTrackFromYoutube(track));
-				// dispatch(selectTrackToPlay(track));
+				setIsPlaying(!isPlaying);
+				onClick(isPlaying);
 			}}
 		>
-			{seletedTrack?.id === track.id ? <BiPause /> : <BiPlay />}
+			{isPlaying ? <BiPause /> : <BiPlay />}
 		</button>
 	);
 };

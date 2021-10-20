@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 
 export const formateDate = (value: string): string => {
+    if (!value) return ""
     try {
         const date = new Date(value);
         return format(date, 'MMM-dd-yyyy');
@@ -16,7 +17,6 @@ export const formatTime = (s: number): string => {
         var secs = s % 60;
         s = (s - secs) / 60;
         var mins = s % 60;
-
         return mins + ':' + secs;
     } catch (_) {
         return `value`;
@@ -42,6 +42,3 @@ export const secondsToMinutesAndSeconds = (s: number) => {
     var finalTime = pad(minutes) + ':' + pad(seconds);
     return finalTime;
 }
-export const isNullOrUndefined = (value: any): boolean => value === null || typeof value === 'undefined';
-
-export const isNotANumber = (value: any): boolean => typeof value !== 'number'

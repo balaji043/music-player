@@ -1,9 +1,10 @@
-import { BiTimeFive } from "react-icons/bi";
-import { ITrackResponse, Track } from "../../../types";
-import { formateDate, formatTime } from "../../../utilities";
+import { BiTimeFive } from 'react-icons/bi';
+import { formateDate, formatTime } from '../../../utilities';
 
-export const TracksTable = (props: { response: ITrackResponse }) => {
-	const isPlayList = false
+export const TracksTable = (props: {
+	response: SpotifyApi.PlaylistTrackResponse;
+}) => {
+	const isPlayList = false;
 	return (
 		<table className='min-w-full text-gray-300 table-auto'>
 			<TrackTableHeads isPlayList={isPlayList} />
@@ -13,7 +14,7 @@ export const TracksTable = (props: { response: ITrackResponse }) => {
 						<TrackRow
 							key={trackItem.track.id}
 							index={index + 1}
-							track={trackItem.track}
+							playListObject={trackItem}
 							addedAt={trackItem.added_at}
 							isPlayList={isPlayList}
 						/>
@@ -59,13 +60,14 @@ TrackTableHeads.defaultProps = {
 	isPlayList: false,
 };
 interface ITrackRowProps {
-	track: Track;
+	playListObject: SpotifyApi.PlaylistTrackObject;
 	index: number;
 	isPlayList?: boolean;
 	addedAt?: string;
 }
 const TrackRow: React.FC<ITrackRowProps> = (props: ITrackRowProps) => {
-	const { track, index, addedAt, isPlayList } = props;
+	const { playListObject, index, addedAt, isPlayList } = props;
+	const { track } = playListObject;
 	const thumbnail = track.album.images[2].url;
 	return (
 		<tr className='text-sm rounded-lg border-t-8 border-b-8 border-transparent border-l-8 border-r-8 hover:bg-gray-600'>

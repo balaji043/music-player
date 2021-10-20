@@ -1,108 +1,43 @@
-import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit";
-import axios, { AxiosResponse } from "axios";
-import { RootState } from "../../redux/store";
-import { StateType, Track } from "../../types";
-import { YoutubeApi } from "./MusicPlayerApi";
+import { createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit";
+import { CallbackState, STATUS, WebPlaybackArtist } from "react-spotify-web-playback/lib";
+import { spotifyApis } from "../../types";
 
-
-interface IApiResponseState<T> {
-    state: StateType,
-    data: T,
-    error: string
-}
-
-
+type MyPlayerState = Partial<CallbackState>;
 interface IMusicPlayerState {
-    youtube: IApiResponseState<any>
+    playerState: MyPlayerState;
 }
 
 const initialState: IMusicPlayerState = {
-    youtube: {
-        data: {},
+    playerState: {
+        currentDeviceId: '',
+        deviceId: '',
+        devices: [],
         error: '',
-        state: "idle"
+        errorType: '',
+        isActive: false,
+        isInitializing: false,
+        isMagnified: false,
+        isPlaying: false,
+        isSaved: false,
+        isUnsupported: false,
+        needsUpdate: false,
+        nextTracks: [],
+        playerPosition: 'bottom',
+        position: 0,
+        previousTracks: [],
+        progressMs: 0,
+        status: STATUS.IDLE,
     }
 }
-
-interface YoutubeId {
-    videoId: string;
-    kind: string;
-}
-interface YoutubeVideo {
-    id: YoutubeId
-}
-interface YoutubeSearchResponse {
-    items: YoutubeVideo[]
-}
-export const searchAndSelectTrackFromYoutube = createAsyncThunk<
-    any,
-    Track,
-    { state: RootState }
->(
-    'search/youtube',
-    async (track, thunkApi) => {
-        try {
-            const name = track.name;
-            const albumName = track.album.name;
-            const q = `${name}+${albumName}`
-            const response: AxiosResponse<YoutubeSearchResponse> = await YoutubeApi.searchYoutube.get('/search', {
-                params: {
-                    q
-                }
-            });
-            if (response.status === 200) {
-                const id = response.data.items[0].id.videoId;
-                // const r: AxiosResponse<any> = await axios.get(YoutubeApi.getUrl(id))
-
-                // if (r.status === 200) {
-                //     return r.data
-                // } else {
-                //     return response.data.items[0];
-                // }
-                return id;
-            } else {
-                return thunkApi.rejectWithValue('')
-            }
-        } catch (error: any) {
-            return thunkApi.rejectWithValue(error?.response?.data)
-        }
-    }
-);
 const musicPlayerSlice = createSlice<IMusicPlayerState, SliceCaseReducers<IMusicPlayerState>>({
     name: 'musicPlayer',
     initialState,
     reducers: {
-
+        setPlayerState: (state, action: PayloadAction<CallbackState>) => {
+            state.playerState = action.payload
+        }
     },
-    extraReducers: (builder) => {
-        builder.addCase(
-            searchAndSelectTrackFromYoutube.fulfilled,
-            (state, payload: PayloadAction<any>) => {
-                if (payload && payload.payload) {
-                    state.youtube = {
-                        data: payload.payload,
-                        error: '',
-                        state: 'idle'
-                    }
-                }
-            }
-        ).addCase(
-            searchAndSelectTrackFromYoutube.pending,
-            (state, payload: PayloadAction<any>) => {
-                state.youtube.state = 'loading';
-                state.youtube.error = ''
-            }
-        ).addCase(
-            searchAndSelectTrackFromYoutube.rejected,
-            (state, payload: PayloadAction<any>) => {
-                state.youtube.error = payload.payload;
-                state.youtube.state = 'error'
-            }
-        );
-    }
 })
 export { musicPlayerSlice }
 
-const selectYoutubeRespose = (state: RootState) => state.musicPlayer.youtube;
-
-export { selectYoutubeRespose }
+export const { setPlayerState } = musicPlayerSlice.actions;

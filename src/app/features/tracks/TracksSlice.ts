@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit"
-import { AxiosResponse } from "axios"
-import { RootState } from "../../redux/store"
-import { ITrackResponse, StateType } from "../../types"
-import { getTracksPlayLists } from "./TracksAPI"
+import { RootState, RootStateType } from "../../redux/store"
+import { spotifyApis, StateType } from "../../types"
 
 interface ITracksState {
     tracksResponse?: globalThis.SpotifyApi.PlaylistTrackResponse;
@@ -19,14 +17,14 @@ const initialState: ITracksState = {
 export const getTracksThunk = createAsyncThunk<
     globalThis.SpotifyApi.PlaylistTrackResponse,
     string,
-    { state: RootState }
+    RootStateType
 >(
     'tracks',
-    async (url, thunkApi) => {
+    async (id, thunkApi) => {
         try {
             const state = thunkApi.getState()
             const token = state.auth.tokens.access_token;
-            const response = await getTracksPlayLists(url, token);
+            const response = await spotifyApis.getPlaylistTracks(id);
             if (response.statusCode === 200) {
                 return response.body
             }

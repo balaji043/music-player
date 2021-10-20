@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import SpotifyWebApi from "spotify-web-api-node";
 import { AppCredentials } from "../../credentials";
 import { CacheKeys, ICacheType, ITokenResponse, Spotify, StringOrNull, VariableStringType } from "../../types";
 

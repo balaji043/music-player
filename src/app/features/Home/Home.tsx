@@ -1,5 +1,4 @@
 import { FC, ReactElement } from 'react';
-import { SpotifyImage } from '../../types';
 
 export const Home = () => {
 	return (
@@ -21,7 +20,7 @@ const RecentPlayed: FC = () => {
 interface ISpotifyItem {
 	name: string;
 	subtitle: string;
-	images: SpotifyImage[];
+	images: SpotifyApi.ImageObject[];
 }
 interface ISuggestionSectionProps<T extends ISpotifyItem> {
 	title: string;

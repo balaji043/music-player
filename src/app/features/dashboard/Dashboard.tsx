@@ -1,5 +1,5 @@
 import { HiHome, HiSearch } from 'react-icons/hi';
-import Home from '../Home/Home';
+import { Home } from '../Home/Home';
 import Search from '../search/Search';
 import Songs from '../songs/Songs';
 import { navigateTo, selectNavPath } from './dashboardSlice';
@@ -49,13 +49,13 @@ export const RightSection = () => {
 export const LeftSection = () => {
 	return (
 		<div className='sm:col-span-3 xl:col-span-2 border-r-2 border-white'>
-			<AppLinks />
+			<AppNavLinks />
 			<PlayList />
 		</div>
 	);
 };
 
-export const AppLinks = () => {
+export const AppNavLinks = () => {
 	return (
 		<div className='flex flex-col w-full border-b-2 border-white'>
 			<AppLink to='home' text='Home' iconType={<HiHome />} />
@@ -74,7 +74,7 @@ const AppLink = (props: {
 	const bg = navPath === props.to ? 'bg-gray-800' : 'hover:bg-gray-500';
 	return (
 		<button
-			className='text-lg rounded p-4 '
+			className='text-lg rounded mx-4 my-2'
 			onClick={() => {
 				dispatch(navigateTo(props.to));
 			}}

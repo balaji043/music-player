@@ -1,8 +1,6 @@
-import axios from "axios";
-import { Spotify, VariableStringType } from "../../types"
-
+import SpotifyWebApi from 'spotify-web-api-node'
 export const getTracksPlayLists = (url: string, token: string) => {
-    const headers: VariableStringType = {};
-    headers[Spotify.ParamKeys.authorization] = `Bearer ${token}`
-    return axios.get(url, { headers });
+    var spotify = new SpotifyWebApi()
+    spotify.setAccessToken(token);
+    return spotify.getPlaylistTracks(url);
 }

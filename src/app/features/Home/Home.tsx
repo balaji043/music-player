@@ -1,11 +1,40 @@
-import React from 'react'
+import { FC, ReactElement } from 'react';
+import { SpotifyImage } from '../../types';
 
-const Home = () => {
-    return (
-        <div className='text-xl text-white'>
-            Home
-        </div>
-    )
+export const Home = () => {
+	return (
+		<div className='text-xl text-white'>
+			<RecentPlayed />
+		</div>
+	);
+};
+const RecentPlayed: FC = () => {
+	return (
+		<SuggestionSection
+			list={[]}
+			onClick={() => {}}
+			title={'Title'}
+			key='Recently Played'
+		/>
+	);
+};
+interface ISpotifyItem {
+	name: string;
+	subtitle: string;
+	images: SpotifyImage[];
+}
+interface ISuggestionSectionProps<T extends ISpotifyItem> {
+	title: string;
+	list: T[];
+	onClick: (value: any) => void;
 }
 
-export default Home
+function SuggestionSection<T extends ISpotifyItem>(
+	props: ISuggestionSectionProps<T>
+): ReactElement {
+	return (
+		<div>
+			<h3>{props.title}</h3>
+		</div>
+	);
+}

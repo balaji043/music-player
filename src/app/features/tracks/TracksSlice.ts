@@ -4,11 +4,8 @@ import { RootState } from "../../redux/store"
 import { ITrackResponse, StateType } from "../../types"
 import { getTracksPlayLists } from "./TracksAPI"
 
-export { }
-
-
 interface ITracksState {
-    tracksResponse?: ITrackResponse;
+    tracksResponse?: globalThis.SpotifyApi.PlaylistTrackResponse;
     state: StateType;
     error: any;
 }
@@ -20,7 +17,7 @@ const initialState: ITracksState = {
 
 
 export const getTracksThunk = createAsyncThunk<
-    ITrackResponse,
+    globalThis.SpotifyApi.PlaylistTrackResponse,
     string,
     { state: RootState }
 >(
@@ -29,11 +26,11 @@ export const getTracksThunk = createAsyncThunk<
         try {
             const state = thunkApi.getState()
             const token = state.auth.tokens.access_token;
-            const response: AxiosResponse<ITrackResponse> = await getTracksPlayLists(url, token);
-            if (response.status === 200) {
-                return response.data
+            const response = await getTracksPlayLists(url, token);
+            if (response.statusCode === 200) {
+                return response.body
             }
-            return thunkApi.rejectWithValue(response.data)
+            return thunkApi.rejectWithValue(response.body)
         } catch (error: any) {
             console.log(error.response.data);
             return thunkApi.rejectWithValue(error.response.data)
@@ -53,7 +50,7 @@ export const tracksSlice = createSlice<
     extraReducers: (builder) => {
         builder.addCase(
             getTracksThunk.fulfilled,
-            (state, action: PayloadAction<ITrackResponse>) => {
+            (state, action: PayloadAction<globalThis.SpotifyApi.PlaylistTrackResponse>) => {
                 if (action && action.payload) {
                     state.tracksResponse = action.payload
                     state.state = 'idle'

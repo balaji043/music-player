@@ -54,7 +54,7 @@ const Player = (props: TrackProp) => {
 			className='grid grid-cols-12 px-6 items-center'
 			style={{ height: '10vh' }}
 		>
-			<TrackInfo track={track} size={40} className='col-span-3' />
+			{/* <TrackInfo track={track} size={40} className='col-span-3' /> */}
 			<PlayerTrack track={track} videoId={videoId} />
 			<div></div>
 		</div>

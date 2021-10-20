@@ -5,7 +5,10 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { Loader } from '../../components/Loader';
 import { ITrackResponse, Track } from '../../types';
 import { formateDate, formatTime } from '../../utilities';
-import { selectSelectedTrack, selectTrackToPlay } from '../dashboard/dashboardSlice';
+import {
+	selectSelectedTrack,
+	selectTrackToPlay,
+} from '../dashboard/dashboardSlice';
 import {
 	getTracksThunk,
 	selectTracksResponse,
@@ -37,7 +40,9 @@ const Tracks = (props: { url: string }) => {
 
 export default Tracks;
 
-export const TracksTable2 = (props: { response: ITrackResponse }) => {
+export const TracksTable2 = (props: {
+	response: SpotifyApi.PlaylistTrackResponse;
+}) => {
 	const isPlayList = true;
 	return (
 		<div className='text-gray-400'>
@@ -63,7 +68,6 @@ export const TracksTable2 = (props: { response: ITrackResponse }) => {
 							key={trackItem.track.id}
 							index={index + 1}
 							track={trackItem.track}
-							addedAt={trackItem.added_at}
 							isPlayList={isPlayList}
 						/>
 					);
@@ -74,13 +78,13 @@ export const TracksTable2 = (props: { response: ITrackResponse }) => {
 };
 
 interface ITrackRowProps {
-	track: Track;
+	track: SpotifyApi.TrackObjectFull;
 	index: number;
 	isPlayList?: boolean;
 	addedAt?: string;
 }
 const TrackRow: React.FC<ITrackRowProps> = (props: ITrackRowProps) => {
-	const { track, index, addedAt, isPlayList } = props;
+	const { track, index, isPlayList } = props;
 	return (
 		<div className='grid grid-cols-12 gap-4 items-center text-sm rounded-lg mt-4 p-4 hover:bg-gray-600'>
 			<div className='col-span-1'>
@@ -101,11 +105,11 @@ const TrackRow: React.FC<ITrackRowProps> = (props: ITrackRowProps) => {
 					</button>
 				</div>
 			)}
-			{isPlayList && addedAt && (
+			{/* {isPlayList && addedAt && (
 				<div className='sm:hidden xl:col-span-2 xl:block'>
 					{formateDate(addedAt)}
 				</div>
-			)}
+			)} */}
 			<div className='text-right'>{formatTime(track?.duration_ms)}</div>
 		</div>
 	);
@@ -115,7 +119,7 @@ TrackRow.defaultProps = {
 };
 
 interface ITrackTablePlayButton {
-	track: Track;
+	track: SpotifyApi.TrackObjectFull;
 }
 export const TrackPlayButton = (props: ITrackTablePlayButton) => {
 	const seletedTrack = useAppSelector(selectSelectedTrack);
@@ -126,8 +130,8 @@ export const TrackPlayButton = (props: ITrackTablePlayButton) => {
 		<button
 			className='text-4xl text-white'
 			onClick={() => {
-				dispatch(searchAndSelectTrackFromYoutube(track));
-				dispatch(selectTrackToPlay(track));
+				// dispatch(searchAndSelectTrackFromYoutube(track));
+				// dispatch(selectTrackToPlay(track));
 			}}
 		>
 			{seletedTrack?.id === track.id ? <BiPause /> : <BiPlay />}
@@ -136,7 +140,7 @@ export const TrackPlayButton = (props: ITrackTablePlayButton) => {
 };
 
 export const TrackInfo = (props: {
-	track: Track;
+	track: SpotifyApi.TrackObjectFull;
 	size: number;
 	className?: string;
 }) => {

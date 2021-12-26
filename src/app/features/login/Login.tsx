@@ -27,16 +27,23 @@ const Login = () => {
 		}
 	}, [code, isLoadedFromCache, hasTokensInCache, dispatch, isAuthenticated]);
 	return (
-		<div className='h-screen w-screen bg-black grid justify-items-center'>
-			<img
-				className='w-1/2'
-				src='https://getheavy.com/wp-content/uploads/2019/12/spotify2019-830x350.jpg'
-				alt='Spotify-Logo'
-			/>
+		<div className='h-screen w-screen bg-white grid justify-items-center'>
+			<img className='max-w-sm' src='/logo512.png' alt='Spotify-Logo' />
+			<div>
+				<p className='text-black text-lg text-center'>Made by</p>
+				<a
+					className='block text-black text-2xl underline border-2 border-gray-800 rounded-lg mt-2 p-2'
+					target='_blank'
+					rel='noopener'
+					href='https://balaji.host'
+				>
+					Balaji R -&gt;
+				</a>
+			</div>
 			<div>
 				<a
-					className='p-4 text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700'
 					href={Spotify.appAccessURL.toString()}
+					className='p-4 text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700'
 				>
 					LOGIN WITH SPOTIFY
 				</a>

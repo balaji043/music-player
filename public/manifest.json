@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Music Player",
+  "name": "Music Player by Balaji Ramasamy",
   "icons": [
     {
       "src": "favicon.ico",
